@@ -18,9 +18,19 @@ def main(receiver: str, subject: str, body: str):
 
     context = ssl.create_default_context()
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
-        smtp.login(EMAIL_SENDER, EMAIL_APP_PASSWORD)
-        smtp.send_message(em)
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+            smtp.login(EMAIL_SENDER, EMAIL_APP_PASSWORD)
+            smtp.send_message(em)
+            print("✅ Email sent successfully.")
+    except smtplib.SMTPAuthenticationError:
+        print("❌ Authentication failed: check email/password.")
+    except smtplib.SMTPRecipientsRefused:
+        print("❌ Recipient address rejected.")
+    except smtplib.SMTPConnectError:
+        print("❌ Could not connect to SMTP server.")
+    except smtplib.SMTPException as e:
+        print(f"❌ Failed to send email: {e}")
 
 
 if __name__ == "__main__":
