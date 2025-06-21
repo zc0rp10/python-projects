@@ -10,6 +10,10 @@ EMAIL_APP_PASSWORD = os.environ.get("ES_EMAIL_APP_PASSWORD")
 
 
 def main(receiver: str, subject: str, body: str):
+    if EMAIL_SENDER is None or EMAIL_APP_PASSWORD is None:
+        print("❌ EMAIL_SENDER and/or EMAIL_APP_PASSWORD environment variables are not set.")
+        return
+
     em = EmailMessage()
     em["From"] = EMAIL_SENDER
     em["To"] = receiver
