@@ -6,7 +6,7 @@ def validate_email_internal(email: str) -> bool:
         validate_email(email)
         return True
     except EmailNotValidError as e:
-        print(str(e))
+        print(f"Invalid e-mail: {e}")
         return False
 
 
@@ -22,13 +22,16 @@ def get_user_email() -> str:
 
 
 def get_split_email(email: str) -> tuple[str, str, str]:
-    if not validate_email_internal(email):
-        raise Exception("Invalid e-mail address")
-
-    username, domain_ext = email.split("@")
-    domain, ext = domain_ext.rsplit(".", 1)
+    username, domain_and_extension = email.split("@")
+    domain, ext = domain_and_extension.rsplit(".", 1)
 
     return username, domain, ext
+
+
+def print_result(user_name: str, domain: str, extension: str):
+    print(f"User name: {user_name}")
+    print(f"Domain: {domain}")
+    print(f"Extension: {extension}")
 
 
 def main():
@@ -36,13 +39,6 @@ def main():
     email = get_user_email()
     user_name, domain, extension = get_split_email(email)
     print_result(user_name, domain, extension)
-
-
-def print_result(user_name: str, domain: str, extension: str):
-    print("\n")
-    print(f"User name: {user_name}")
-    print(f"Domain: {domain}")
-    print(f"Extension: {extension}")
 
 
 if __name__ == "__main__":
