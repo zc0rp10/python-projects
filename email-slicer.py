@@ -1,8 +1,3 @@
-# collect email from the user
-# validate the email
-# splice the email using the @, first part as username, secondpart i saved as domain
-# split domain from the extension
-
 import re
 
 
@@ -47,7 +42,7 @@ def get_split_email(email: str) -> tuple[str, str, str]:
         raise Exception("Invalid e-mail address")
 
     username, domain_ext = email.split("@")
-    domain, ext = domain_ext.split(".")
+    domain, ext = domain_ext.rsplit(".", 1)
 
     return username, domain, ext
 
@@ -56,6 +51,10 @@ def main():
     print("==== E-Mail Slicer ====")
     email = get_user_email()
     user_name, domain, extension = get_split_email(email)
+    print_result(user_name, domain, extension)
+
+
+def print_result(user_name: str, domain: str, extension: str):
     print("\n")
     print(f"User name: {user_name}")
     print(f"Domain: {domain}")
