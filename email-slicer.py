@@ -1,44 +1,28 @@
-from email_validator import validate_email, EmailNotValidError
+from email_validator import ValidatedEmail, validate_email, EmailNotValidError
+from typing import Optional
 
 
-def validate_email_internal(email: str) -> bool:
-    try:
-        validate_email(email)
-        return True
-    except EmailNotValidError as e:
-        print(f"Invalid e-mail: {e}")
-        return False
+def main() -> None:
+    print("==== E-Mail Slicer ====\n")
 
+    email_validated: Optional[ValidatedEmail] = None
 
-def get_user_email() -> str:
-    email_valid: bool = False
-    email: str = ""
+    while not email_validated:
+        try:
+            email_input: str = input("Enter your email address: ").strip()
+            email_validated = validate_email(email_input, check_deliverability=False)
+        except EmailNotValidError as e:
+            print(f"Invalid e-mail: {e}")
 
-    while not email_valid:
-        email = input("Enter your email address: ").strip()
-        email_valid = validate_email_internal(email)
+    (user_name, domain_and_extension) = email_validated.email.split("@")
+    domain_parts = domain_and_extension.split(".")
+    domain = ".".join(domain_parts[:-1])
+    extension = domain_parts[-1]
 
-    return email
-
-
-def get_split_email(email: str) -> tuple[str, str, str]:
-    username, domain_and_extension = email.split("@")
-    domain, ext = domain_and_extension.rsplit(".", 1)
-
-    return username, domain, ext
-
-
-def print_result(user_name: str, domain: str, extension: str):
-    print(f"User name: {user_name}")
-    print(f"Domain: {domain}")
-    print(f"Extension: {extension}")
-
-
-def main():
-    print("==== E-Mail Slicer ====")
-    email = get_user_email()
-    user_name, domain, extension = get_split_email(email)
-    print_result(user_name, domain, extension)
+    print("\nEmail successfully parsed:")
+    print(f" - User name : {user_name}")
+    print(f" - Domain    : {domain}")
+    print(f" - Extension : {extension}")
 
 
 if __name__ == "__main__":
